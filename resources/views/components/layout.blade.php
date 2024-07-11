@@ -48,9 +48,24 @@
         @endauth
 
       </div>
-    </header>
-    <!-- header ends here -->
+      {{-- <div>
+        @if(Session::has('follow'))
+          <p class="alert alert-info">{{ Session::get('follow') }}</p>
+        @else(Session::has('user'))
+        <p class="alert alert-info">{{ Session::get('user') }}</p>
 
+          @endif
+      </div>
+    </header> --}}
+    <!-- header ends here -->
+    <div>
+        @if(Session::has('follow'))
+          <p class="alert alert-info">{{ Session::get('follow') }}</p>
+        @elseif (Session::has('user'))
+        <p class="alert alert-info">{{ Session::get('user') }}</p>
+        @endif
+      </div>
+    </header>
         {{$slot}}
 
 

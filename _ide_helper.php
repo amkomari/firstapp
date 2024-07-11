@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.48.7.
+ * Generated for Laravel 10.48.11.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -17234,7 +17234,7 @@ namespace Intervention\Image\Laravel\Facades {
      *
      */        class Image {
                     /**
-         * Create image mangager with given driver
+         * Create image manager with given driver
          *
          * @link https://image.intervention.io/v3/basics/image-manager
          * @param string|\Intervention\Image\Interfaces\DriverInterface $driver
@@ -17267,6 +17267,7 @@ namespace Intervention\Image\Laravel\Facades {
                     /**
          * Create new image instance with given width & height
          *
+         * @see ImageManagerInterface::create()
          * @link https://image.intervention.io/v3/basics/instantiation#creating-new-images
          * @param int $width
          * @param int $height
@@ -17301,9 +17302,10 @@ namespace Intervention\Image\Laravel\Facades {
          * If the second parameter is not set, an attempt to decode the input is made
          * with all available decoders of the driver.
          *
+         * @see ImageManagerInterface::read()
          * @link https://image.intervention.io/v3/basics/instantiation#reading-images
          * @param mixed $input
-         * @param string|array|\Intervention\Image\Interfaces\DecoderInterface $decoders
+         * @param string|array<DecoderInterface>|\Intervention\Image\Interfaces\DecoderInterface $decoders
          * @throws RuntimeException
          * @return \Intervention\Image\Interfaces\ImageInterface 
          * @static 
@@ -17315,6 +17317,7 @@ namespace Intervention\Image\Laravel\Facades {
                     /**
          * Create new animated image by given callback
          *
+         * @see ImageManagerInterface::animate()
          * @link https://image.intervention.io/v3/basics/instantiation#creating-animations
          * @param callable $init
          * @return \Intervention\Image\Interfaces\ImageInterface 
@@ -17323,6 +17326,17 @@ namespace Intervention\Image\Laravel\Facades {
         {
                         /** @var \Intervention\Image\ImageManager $instance */
                         return $instance->animate($init);
+        }
+                    /**
+         * Return currently used driver
+         *
+         * @see ImageManagerInterface::driver()
+         * @return \Intervention\Image\Interfaces\DriverInterface 
+         * @static 
+         */        public static function driver()
+        {
+                        /** @var \Intervention\Image\ImageManager $instance */
+                        return $instance->driver();
         }
             }
     }
@@ -17500,10 +17514,10 @@ namespace Spatie\LaravelIgnition\Facades {
          * 
          *
          * @static 
-         */        public static function registerErrorHandler()
+         */        public static function registerErrorHandler($errorLevels = null)
         {
                         /** @var \Spatie\FlareClient\Flare $instance */
-                        return $instance->registerErrorHandler();
+                        return $instance->registerErrorHandler($errorLevels);
         }
                     /**
          * 
@@ -17571,10 +17585,19 @@ namespace Spatie\LaravelIgnition\Facades {
          * 
          *
          * @static 
-         */        public static function report($throwable, $callback = null, $report = null)
+         */        public static function report($throwable, $callback = null, $report = null, $handled = null)
         {
                         /** @var \Spatie\FlareClient\Flare $instance */
-                        return $instance->report($throwable, $callback, $report);
+                        return $instance->report($throwable, $callback, $report, $handled);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function reportHandled($throwable)
+        {
+                        /** @var \Spatie\FlareClient\Flare $instance */
+                        return $instance->reportHandled($throwable);
         }
                     /**
          * 

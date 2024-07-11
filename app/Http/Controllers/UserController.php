@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
-use App\Models\Follow;
 use App\Models\User;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Models\Follow;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Intervention\Image\Drivers\Gd\Driver;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class UserController extends Controller
 {
@@ -19,16 +21,38 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function profile(User $profile)
-    {
+
+    private function getSharedData(User $profile){
+
+
         $currentlyFollowing = 0;
 
         if (auth()->check()) {
             $currentlyFollowing = Follow::where([['user_id', '=', auth()->user()->id], ['followeduser', '=', $profile->id]])->count();
         }
 
-        return view('profile-posts', ['currentlyFollowing' => $currentlyFollowing, 'avatar' => $profile->avatar, 'username' => $profile->username, 'posts' => $profile->posts()->latest()->get(), 'postCount' => $profile->posts()->count()]);
+        View::share('sharedData',['currentlyFollowing' => $currentlyFollowing, 'avatar' => $profile->avatar, 'username' => $profile->username, 'postCount' => $profile->posts()->count()]);
     }
+
+    public function profile(User $profile)
+    {
+        $this->getSharedData($profile);
+        return view('profile-posts', ['posts' => $profile->posts()->latest()->get()]);
+
+    }
+
+    public function profileFollowers(User $profile)
+    {
+        $this->getSharedData($profile);
+        return view('profile-followers', ['posts' => $profile->posts()->latest()->get()]);
+    }
+
+    public function profileFollowing(User $profile)
+    {
+        $this->getSharedData($profile);
+        return view('profile-following', ['posts' => $profile->posts()->latest()->get()]);
+    }
+
 
     public function index(LoginRequest $request)
     {
@@ -74,6 +98,9 @@ class UserController extends Controller
         ]);
         User::create($incomingFields);
         // dd(auth()->user());
+        Session::flash('user', 'Crated successfully');
+
+
         return redirect('/');
     }
 
@@ -119,7 +146,7 @@ class UserController extends Controller
         $request->validate([
             'avatar' => 'required|image|max:3000',
         ]);
-        User: $user = auth()->user();
+        $user = auth()->user();
         $filename = $user->id . "_" . uniqid() . ".jpg";
 
         $manager = new ImageManager(new Driver());
@@ -137,7 +164,9 @@ class UserController extends Controller
         if ($oldAvatar != "/fallback-avatar.jpg") {
             Storage::delete(str_replace("/storage/", "public", $oldAvatar));
         }
-        return back()->with('success', 'Avatar Updated');
+        Session::flash('user', 'Avatar Updated');
+
+        return back();
 
     }
 }
