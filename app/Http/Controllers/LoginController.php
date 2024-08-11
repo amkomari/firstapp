@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class LoginController extends Controller
 {
@@ -11,7 +12,9 @@ class LoginController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+
     {
+        info("twest");
         return view('homepage');
     }
 

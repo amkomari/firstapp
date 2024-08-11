@@ -1,8 +1,16 @@
 <x-layout>
 
+    @php
+        extract($sharedData);
+    @endphp
+
     <div class="container py-md-5 container--narrow">
         <h2>
-          <img class="avatar-small" src="{{$avatar}}" /> {{$username}}
+            {{-- @if (isset($avatar)) --}}
+
+            <img class="avatar-small" src="{{$avatar}}" />
+            {{-- @endif --}}
+            {{$username}}
           @auth
           @if (! $currentlyFollowing AND auth()->user()->username != $username)
           <form class="ml-2 d-inline" action="/create-follow/{{$username}}" method="GET">

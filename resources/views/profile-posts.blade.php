@@ -1,4 +1,5 @@
-<x-profile :avatar="$avatar" :username="$username" :currentlyFollowing="$currentlyFollowing" :postCount="$postCount">
+<x-profile :sharedData='$sharedData'>
+    {{-- <h1>{{$sharedData}}</h1> --}}
     <div class="list-group">
         @foreach ($posts as $post)
 

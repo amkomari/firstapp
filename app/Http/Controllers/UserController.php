@@ -7,7 +7,6 @@ use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Session;
@@ -31,20 +30,27 @@ class UserController extends Controller
             $currentlyFollowing = Follow::where([['user_id', '=', auth()->user()->id], ['followeduser', '=', $profile->id]])->count();
         }
 
-        View::share('sharedData',['currentlyFollowing' => $currentlyFollowing, 'avatar' => $profile->avatar, 'username' => $profile->username, 'postCount' => $profile->posts()->count()]);
+        $sharedData = ['posts' => $profile->posts,'currentlyFollowing' => $currentlyFollowing, 'avatar' => $profile->avatar, 'username' => $profile->username, 'postCount' => $profile->posts()->count()];
+        View::share('sharedData',$sharedData);
+        return $sharedData;
     }
 
     public function profile(User $profile)
     {
+        // dd($profile);
+
         $this->getSharedData($profile);
-        return view('profile-posts', ['posts' => $profile->posts()->latest()->get()]);
+
+return view('profile-posts', ['posts' => $profile->posts()->latest()->get()]);
 
     }
 
     public function profileFollowers(User $profile)
     {
         $this->getSharedData($profile);
-        return view('profile-followers', ['posts' => $profile->posts()->latest()->get()]);
+        $profile->follwers()->latest()->get();
+        // return $profile->follwers()->latest()->get();
+        return view('profile-followers', ['followers' => $profile->follwers()->latest()->get()]);
     }
 
     public function profileFollowing(User $profile)

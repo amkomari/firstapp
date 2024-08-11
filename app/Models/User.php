@@ -29,6 +29,8 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $with = ['posts', 'follwers'];
+
     protected function avatar(): Attribute {
         return Attribute::make(get: function($value){
             return $value ? '/storage/avatars/' . $value : '/fallback-avatar.jpg' ;
@@ -58,4 +60,13 @@ class User extends Authenticatable
     public function posts(){
         return $this->hasMany(Post::class,'user_id');
     }
+
+    public function follwers(){
+        return $this->hasMany(Follow::class, 'followeduser');
+    }
+
+    public function follwingTheseUsers(){
+        return $this->hasMany(Follow::class, 'user_id');
+    }
+
 }
