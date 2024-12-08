@@ -48,7 +48,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-       return view('edit-post', ['post'=> $post ]); //
+       return view('edit-post', ['post'=> $post])->with('success','Post Edeted'); //
     }
 
     /**
@@ -62,9 +62,12 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, Post $post)
     {
-        //
+        $post->title = $request['title'];
+        $post->body = $request['body'];
+        $post->save();
+        return view('single-post', ['post'=> $post])->with('success','Post Edeted');
     }
 
     /**
@@ -73,7 +76,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         if (auth()->user()->can('destroy',$post)){
-            
+
             return "you cannot delete this";
         }
         $post->delete();

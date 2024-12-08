@@ -42,7 +42,7 @@ Route::post('/create-post', [PostController::class, "store"])->middleware('auth'
 Route::get('/post/{post}', [PostController::class, "index"])->middleware('auth');
 Route::post('/post/delete/{post}', [PostController::class, "destroy"])->middleware('can:delete,post');
 Route::get('/post/{post}/edit', [PostController::class, 'show'])->middleware('can:update,post');
-Route::put('/post/{post}/edit', [PostController::class, 'update'])->middleware('can:update,post');
+Route::put('/post/{post}/edit', [PostController::class, 'update'])->middleware('can:update,post',);
 
 /////Profile Routs
 Route::get('/profile/{profile:username}', [UserController::class, 'profile'])->middleware('auth');
